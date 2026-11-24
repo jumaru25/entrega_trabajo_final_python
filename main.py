@@ -1,11 +1,9 @@
 import dataset
-
 miBase = dataset.connect("sqlite:///base.db")
-
 tabla = miBase["Productos"]
 
 while True:
-    opciones = input("\nA - Agregar\nL - Listar\nS - Salir\nR - Remover por nombre\nID - Borrar por ID\n").upper()
+    opciones = input("\nA - Agregar\nL - Listar\nS - Salir\nBT - Buscar en toda la base:\nR - Remover por nombre\nID - Borrar por ID\n").upper()
 
     match opciones:
 
@@ -37,3 +35,21 @@ while True:
             tabla.delete(id=borrarID)
             
             print(f"\nEl producto cuyo ID es {borrarID} fue quitado con exito!!!\n")
+               
+        case "AC":
+            idBuscar = int(input("\nID a actualizar: "))
+            
+            nombreActualizar = input("\nNombre nuevo: ")
+            precioActualizar = float(input("\nprecio nuevo: "))
+            catActualizar = input("\nCategoria nueva: ")
+            
+            actualizar = {"id":idBuscar,"Nombre":nombreActualizar, "Precio":precioActualizar,"Categoria":catActualizar}
+            tabla.upsert(actualizar,["id"])
+        
+        case "BT":
+            buscarTodo = input("\nProducto a buscar: ")
+            
+            encontrados = tabla.find(Nombre=buscarTodo)
+            
+            for encontrado in encontrados:
+                print(f'{encontrado["Nombre"]} Se encontró en ID: {encontrado["id"]}')
